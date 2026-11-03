@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Автосалон & Тест-драйв</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav>
+    <button id="nav-catalog" data-testid="nav-catalog-btn">Каталог</button>
+    <button id="nav-admin" data-testid="nav-admin-btn">Админка</button>
+</nav>
+
+<div class="container">
+
+    <section id="page-catalog" class="page">
+        <h2>Каталог автомобилей</h2>
+        <div class="filters">
+            <input type="text" id="filter-brand" data-testid="filter-brand" placeholder="Бренд">
+            <input type="number" id="filter-min-price" data-testid="filter-min-price" placeholder="Цена от">
+            <input type="number" id="filter-max-price" data-testid="filter-max-price" placeholder="Цена до">
+            <button id="btn-apply-filters" data-testid="apply-filters">Применить</button>
+        </div>
+        <div id="cars-list" class="cars-grid"></div>
+    </section>
+
+    <section id="page-details" class="page hidden">
+        <h2 id="detail-title">Детали автомобиля</h2>
+        <div class="car-info">
+            <p>VIN: <span id="detail-vin" data-testid="car-vin"></span></p>
+            <p>Цена: <span id="detail-price" data-testid="car-price"></span></p>
+        </div>
+
+        <h3>Запись на тест-драйв</h3>
+        <div class="form-group">
+            <input type="text" id="book-name" data-testid="input-name" placeholder="Ваше имя">
+            <input type="text" id="book-phone" data-testid="input-phone" placeholder="Телефон (+7...)">
+            <input type="email" id="book-email" data-testid="input-email" placeholder="Email">
+
+            <input type="date" id="book-date" data-testid="input-date">
+            <select id="book-time" data-testid="input-time">
+                <option value="">Выберите время</option>
+                <option value="09:00">09:00</option>
+                <option value="10:00">10:00</option>
+                <option value="11:00">11:00</option>
+                <option value="12:00">12:00</option>
+                <option value="13:00">13:00</option>
+                <option value="14:00">14:00</option>
+                <option value="15:00">15:00</option>
+                <option value="16:00">16:00</option>
+                <option value="17:00">17:00</option>
+                <option value="18:00">18:00</option>
+                <option value="19:00">19:00</option>
+                <option value="20:00">20:00</option>
+            </select>
+
+            <button id="btn-submit-booking" data-testid="submit-booking">Записаться</button>
+        </div>
+        <div id="booking-error" data-testid="form-error-message" class="error hidden"></div>
+    </section>
+
+    <section id="page-confirmation" class="page hidden">
+        <h2>Подтверждение записи</h2>
+        <p>На указанный телефон отправлено SMS с кодом подтверждения.</p>
+        <div class="form-group">
+            <input type="text" id="sms-code" data-testid="sms-code-input" placeholder="Введите 4-значный код">
+            <button id="btn-confirm-sms" data-testid="confirm-code-button">Подтвердить</button>
+        </div>
+        <div id="sms-error" data-testid="sms-error-block" class="error hidden"></div>
+        <div id="sms-success" data-testid="booking-success-alert" class="success hidden">Запись успешно подтверждена!</div>
+    </section>
+
+    <section id="page-admin" class="page hidden">
+        <h2>Панель администратора</h2>
+        <div class="form-group">
+            <input type="text" id="admin-vin" data-testid="admin-vin" placeholder="VIN (17 символов)">
+            <div id="error-vin" data-testid="error-vin" class="field-error hidden"></div>
+            <input type="text" id="admin-brand" data-testid="admin-brand" placeholder="Бренд">
+            <input type="text" id="admin-model" data-testid="admin-model" placeholder="Модель">
+            <input type="number" id="admin-year" data-testid="admin-year" placeholder="Год выпуска">
+            <input type="number" id="admin-price" data-testid="admin-price" placeholder="Цена">
+            <div id="error-price" data-testid="error-price" class="field-error hidden"></div>
+            <button id="btn-save-car" data-testid="admin-save-car">Сохранить автомобиль</button>
+        </div>
+        <div id="admin-success" class="success hidden">Машина успешно добавлена!</div>
+    </section>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

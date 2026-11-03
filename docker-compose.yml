@@ -1,0 +1,85 @@
+services:
+  postgres-db:
+    image: postgres:15-alpine
+    container_name: car-postgres
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: dealership_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./init-scripts:/docker-entrypoint-initdb.d
+    networks:
+      - dealership-network
+    restart: unless-stopped
+
+  notification-service:
+    build:
+      context: ./notification-service
+      dockerfile: Dockerfile
+    container_name: car-notification
+    ports:
+      - "8083:8080"
+    networks:
+      - dealership-network
+    depends_on:
+      - postgres-db
+
+  booking-service:
+    build:
+      context: ./booking-service
+      dockerfile: Dockerfile
+    container_name: car-booking
+    ports:
+      - "8082:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-db:5432/dealership_db?currentSchema=booking
+      - SPRING_DATASOURCE_USERNAME=user
+      - SPRING_DATASOURCE_PASSWORD=password
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    networks:
+      - dealership-network
+    depends_on:
+      - postgres-db
+
+  main-backend-service:
+    build:
+      context: ./main-backend-service
+      dockerfile: Dockerfile
+    container_name: car-main-backend
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-db:5432/dealership_db?currentSchema=main
+      - SPRING_DATASOURCE_USERNAME=user
+      - SPRING_DATASOURCE_PASSWORD=password
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - BOOKING_SERVICE_URL=http://car-booking:8080
+      - NOTIFICATION_SERVICE_URL=http://car-notification:8080
+    networks:
+      - dealership-network
+    depends_on:
+      - postgres-db
+      - booking-service
+      - notification-service
+
+  frontend-ui:
+    build:
+      context: ./frontend-ui
+      dockerfile: Dockerfile
+    container_name: car-frontend-ui
+    ports:
+      - "3000:80"
+    networks:
+      - dealership-network
+    depends_on:
+      - main-backend-service
+
+volumes:
+  pgdata:
+
+networks:
+  dealership-network:
+    driver: bridge
